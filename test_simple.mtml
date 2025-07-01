@@ -1,0 +1,28 @@
+<!-- Simple test for debugging -->
+<h2>Debug Test</h2>
+
+<mt:SetVar name="test_url" value="http://dx.bizocean.test/api/" />
+<p>Original: <mt:Var name="test_url" /></p>
+
+<!-- Test each pattern individually -->
+<p>Step 1 (remove duplicate slashes): <mt:Var name="test_url" regex_replace_ex="/\/+/\//g" /></p>
+
+<mt:SetVar name="step1_result" value="http://dx.bizocean.test/api/" />
+<p>Step 2 (fix protocol): <mt:Var name="step1_result" regex_replace_ex="/(https?:)\/+/$1\//" /></p>
+
+<mt:SetVar name="step2_result" value="http://dx.bizocean.test/api/" />
+<p>Step 3 (remove api/): <mt:Var name="step2_result" regex_replace_ex="/api\/$//" /></p>
+
+<!-- Test alternative patterns for removing api/ -->
+<p>Alternative 1: <mt:Var name="test_url" regex_replace_ex="/\/api\/$/\/" /></p>
+<p>Alternative 2: <mt:Var name="test_url" regex_replace_ex="/api\/$//g" /></p>
+<p>Alternative 3: <mt:Var name="test_url" regex_replace_ex="/\/api$/\/" /></p>
+
+<!-- Test the full chain -->
+<mt:SetVarBlock name="final_result">
+  <mt:Var name="test_url"
+    regex_replace_ex="/\/+/\//g"
+    regex_replace_ex="/(https?:)\/+/$1\//"
+    regex_replace_ex="/\/api\/$/\/" />
+</mt:SetVarBlock>
+<p>Final result: <mt:Var name="final_result" /></p>

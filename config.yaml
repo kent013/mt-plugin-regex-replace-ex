@@ -1,0 +1,12 @@
+id: RegexReplaceEx
+name: RegexReplaceEx
+description: Prettier-compatible regex replacement filter for Movable Type
+version: 1.0
+author_name: Kentaro ISHITOYA
+author_link: https://github.com/kent013
+plugin_link: https://github.com/kent013/mt-plugin-regex-replace-ex
+doc_link: https://github.com/kent013/mt-plugin-regex-replace-ex
+
+tags:
+  modifier:
+    regex_replace_ex: RegexReplaceEx::Plugin::_fltr_regex_replace_ex

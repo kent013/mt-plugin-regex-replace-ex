@@ -1,0 +1,103 @@
+<!-- RegexReplaceEx Plugin Test Template -->
+<!-- This file demonstrates both syntax patterns for the regex_replace_ex filter -->
+
+<h1>RegexReplaceEx Plugin Test</h1>
+
+<h2>Pattern 1: Single Attribute Format (/pattern/replacement/flags)</h2>
+
+<h3>Test 1.1: Basic URL Normalization</h3>
+<mt:SetVar name="test_url" value="https://example.com//api//v1///endpoint//" />
+<p>Original: <mt:Var name="test_url" /></p>
+<p>Fixed: <mt:Var name="test_url" regex_replace_ex="/\/+/\//g" /></p>
+
+<h3>Test 1.2: Case Insensitive Replacement</h3>
+<mt:SetVar name="test_case" value="Hello HELLO hello HeLLo" />
+<p>Original: <mt:Var name="test_case" /></p>
+<p>Replace all 'hello': <mt:Var name="test_case" regex_replace_ex="/hello/Hi/gi" /></p>
+
+<h3>Test 1.3: Backreferences</h3>
+<mt:SetVar name="test_backref" value="John Smith, Jane Doe, Bob Johnson" />
+<p>Original: <mt:Var name="test_backref" /></p>
+<p>Swap names: <mt:Var name="test_backref" regex_replace_ex="/(\w+)\s+(\w+)/$2, $1/g" /></p>
+
+<hr>
+
+<h2>Pattern 2: Separate Attributes Format (pattern="" replacement="")</h2>
+
+<h3>Test 2.1: Basic URL Normalization</h3>
+<mt:SetVar name="test_url2" value="https://example.com//api//v1///endpoint//" />
+<p>Original: <mt:Var name="test_url2" /></p>
+<p>Fixed: <mt:Var name="test_url2" regex_replace_ex pattern="/\/+/g" replacement="/" /></p>
+
+<h3>Test 2.2: Your Specific Use Case</h3>
+<mt:SetVar name="dxEndpoint" value="https://api.example.com///v1//endpoint/api/" />
+<p>Original: <mt:Var name="dxEndpoint" /></p>
+<mt:SetVarBlock name="dxEndpoint_fixed">
+  <mt:Var name="dxEndpoint"
+    regex_replace_ex pattern="/\/+/g" replacement="/"
+    regex_replace_ex pattern="/(https?:)\/+/" replacement="$1//"
+    regex_replace_ex pattern="/api\/$/g" replacement="" />
+</mt:SetVarBlock>
+<p>Fixed: <mt:Var name="dxEndpoint_fixed" /></p>
+
+<h3>Test 2.3: Empty Replacement</h3>
+<mt:SetVar name="test_remove" value="Remove all numbers: 123 test 456 string 789" />
+<p>Original: <mt:Var name="test_remove" /></p>
+<p>No numbers: <mt:Var name="test_remove" regex_replace_ex pattern="/\d+\s*/g" replacement="" /></p>
+
+<h3>Test 2.4: Multiple Replacements</h3>
+<mt:SetVar name="test_multi" value="The quick brown fox jumps over the lazy dog" />
+<p>Original: <mt:Var name="test_multi" /></p>
+<mt:SetVarBlock name="test_multi_fixed">
+  <mt:Var name="test_multi"
+    regex_replace_ex pattern="/quick/" replacement="slow"
+    regex_replace_ex pattern="/brown/" replacement="red"
+    regex_replace_ex pattern="/lazy/" replacement="sleeping" />
+</mt:SetVarBlock>
+<p>Modified: <mt:Var name="test_multi_fixed" /></p>
+
+<hr>
+
+<h2>Comparison with Original regex_replace</h2>
+
+<h3>Original Syntax (Causes Prettier Errors):</h3>
+<pre><code>&lt;mt:Var name="dxEndpoint"
+  regex_replace="/\/+/g","/"
+  regex_replace="/(https?:)\/+/","$1//"
+  regex_replace="/api\/$/","" /&gt;</code></pre>
+
+<h3>New Syntax Options (Prettier Compatible):</h3>
+
+<h4>Option 1: Single Attribute Format</h4>
+<pre><code>&lt;mt:Var name="dxEndpoint"
+  regex_replace_ex="/\/+/\//g"
+  regex_replace_ex="/(https?:)\/+/$1\///"
+  regex_replace_ex="/api\/$//g" /&gt;</code></pre>
+
+<h4>Option 2: Separate Attributes Format (Recommended)</h4>
+<pre><code>&lt;mt:Var name="dxEndpoint"
+  regex_replace_ex pattern="/\/+/g" replacement="/"
+  regex_replace_ex pattern="/(https?:)\/+/" replacement="$1//"
+  regex_replace_ex pattern="/api\/$/g" replacement="" /&gt;</code></pre>
+
+<hr>
+
+<h2>Edge Cases</h2>
+
+<h3>Test: Simple String Replacement (no regex delimiters)</h3>
+<mt:SetVar name="test_simple" value="Replace this simple text" />
+<p>Original: <mt:Var name="test_simple" /></p>
+<p>Replaced: <mt:Var name="test_simple" regex_replace_ex pattern="simple" replacement="complex" /></p>
+
+<h3>Test: Special Characters in Replacement</h3>
+<mt:SetVar name="test_special" value="Price: 100" />
+<p>Original: <mt:Var name="test_special" /></p>
+<p>With $: <mt:Var name="test_special" regex_replace_ex pattern="/(\d+)/" replacement="$$1.00" /></p>
+
+<h3>Test: Multi-line Mode</h3>
+<mt:SetVar name="test_multiline" value="Line 1
+Line 2
+Line 3" />
+<p>Original (with line breaks):</p>
+<pre><mt:Var name="test_multiline" /></pre>
+<p>Replace line starts: <pre><mt:Var name="test_multiline" regex_replace_ex="/^Line/> Line/gm" /></pre></p>
